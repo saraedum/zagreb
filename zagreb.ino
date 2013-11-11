@@ -3,8 +3,11 @@
 #include "progmem_board.h"
 #include <Adafruit_NeoPixel.h>
 
-#include "module/test_strip.h"
-#include "module/test_wall.h"
+//#include "module/test_strip.h"
+//#include "module/test_wall.h"
+#include "module/solid_fade.h"
+#include "module/fade/linear_fade.h"
+#include "module/palette/random_palette.h"
 
 const uint8_t id3[] PROGMEM = { 15, 14, 5, 4,
                                 16, 13, 6, 3,
@@ -68,12 +71,16 @@ void setup() {
 	wall.add(board9,8,0);
 	wall.add(board10,12,0);
 	wall.add(board11,4,5);
-	TestWall t(&wall);
-	t.setup();
+	RandomPalette pal(1337);
+	LinearFade fade(&pal);
+	SolidFade m(&wall, &fade);
+	//TestWall t(&wall);
+	//t.setup();
+	m.setup();
 	while(1){
-		t.loop();
+		m.loop();
 	}
-	t.shutdown();
+	m.shutdown();
 }
 
 void loop() {}

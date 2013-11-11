@@ -1,7 +1,7 @@
 #ifndef TEST_STRIP_H
 #define TEST_STRIP_H
 
-#include "../color.h"
+#include "../util/color.h"
 #include "delay_module.h"
 #include <Adafruit_NeoPixel.h>
 

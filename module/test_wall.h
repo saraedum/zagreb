@@ -1,7 +1,7 @@
 #ifndef TEST_WALL_H
 #define TEST_WALL_H
 
-#include "../color.h"
+#include "../util/color.h"
 #include "delay_module.h"
 
 class TestWall : public DelayModule {
