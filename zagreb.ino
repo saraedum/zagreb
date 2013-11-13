@@ -5,9 +5,14 @@
 
 //#include "module/test_strip.h"
 //#include "module/test_wall.h"
-#include "module/solid_fade.h"
+//#include "module/solid_fade.h"
 #include "module/fade/linear_fade.h"
 #include "module/palette/random_palette.h"
+#include "module/palette/black_palette.h"
+#include "module/dist/random_dist.h"
+#include "module/dist_fade.h"
+#include "module/fps.h"
+#include "util/now.h"
 
 const uint8_t id3[] PROGMEM = { 15, 14, 5, 4,
                                 16, 13, 6, 3,
@@ -63,7 +68,6 @@ ProgmemBoard* const board11 = new ProgmemBoard(strip11, 4, 5, id11);
 Wall wall(13, 10);
 
 void setup() {
-	Serial.begin(9600);
 
 	wall.add(board3,0,0);
 	wall.add(board5,0,5);
@@ -72,13 +76,19 @@ void setup() {
 	wall.add(board10,12,0);
 	wall.add(board11,4,5);
 	RandomPalette pal(1337);
-	LinearFade fade(&pal);
-	SolidFade m(&wall, &fade);
+	BlackPalette pal2(&pal, 3, 2);
+	LinearFade fade(&pal2);
+	//SolidFade m(&wall, &fade);
+	RandomDist dist(wall.height,wall.width,analogRead(5)); // read from an unconnected pin for a random number
+	DistFade m(&wall, &fade, &dist);
 	//TestWall t(&wall);
 	//t.setup();
 	m.setup();
+	FPS fps;
 	while(1){
+		NOW = millis();
 		m.loop();
+		fps.loop();
 	}
 	m.shutdown();
 }
