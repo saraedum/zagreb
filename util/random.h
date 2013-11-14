@@ -50,4 +50,8 @@ class Random {
 		}
 };
 
+uint32_t hwrandom(const uint8_t pin){
+	return ((uint32_t)analogRead(pin))<<22 ^ ((uint32_t)analogRead(pin))<<14 ^ ((uint32_t)analogRead(pin))<<7 ^ ((uint32_t)analogRead(pin)); // analog read returns only 10 bits
+}
+
 #endif
