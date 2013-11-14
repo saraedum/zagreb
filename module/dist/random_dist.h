@@ -2,6 +2,7 @@
 #define RANDOM_DIST_H
 
 #include "dist.h"
+#include "../../util/random.h"
 
 class RandomDist : public Dist {
 	private:

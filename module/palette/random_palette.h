@@ -2,7 +2,7 @@
 #define RANDOM_PALETTE_H
 
 #include "palette.h"
-#include "../../util/random.h"
+#include "../../util/hash.h"
 
 class RandomPalette : public Palette {
 	private:
@@ -11,9 +11,7 @@ class RandomPalette : public Palette {
 		RandomPalette(uint32_t seed):seed(seed){}
 	protected:
 		virtual uint32_t color(uint32_t n){
-			Random random(seed);
-			random.skip(n-1);
-			return random.randrange(0,0x1000000);
+			return hash(n + seed) & 0xffffff;
 		}
 };
 

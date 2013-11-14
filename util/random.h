@@ -16,12 +16,12 @@ class Random {
 				return;
 			if (n%2){
 				fast_exp(n-1,a,c);
-				a*=this->a;
-				c+=this->a*c + this->c;
+				a = a* this->a;
+				c = this->a*c + this->c;
 			}else{
 				fast_exp(n/2,a,c);
 				a*=a;
-				c+=a*c+c;
+				c = a*c+c;
 			}
 		}
 		void loop(const uint32_t a, const uint32_t c){
