@@ -5,16 +5,21 @@
 #include "../../util/color.h"
 
 class LinearFade : public Fade {
+	private:
+		inline uint8_t mix(uint8_t c1, uint8_t c2, uint8_t lambda){ // weighted average of two bytes without overflow
+			return (c1>c2)?
+				(((c1-c2)>>4) * (lambda>>4) + c2):
+				(((c2-c1)>>4) * ((0xff-lambda)>>4) + c1);
+		}
 	public:
 		LinearFade(Palette* const palette):Fade(palette){}
-	protected:
-		virtual uint32_t color(const uint32_t t){
-			const uint32_t color0 = palette->color(t/1000);
-			const uint32_t color1 = palette->color(t/1000 + 1);
-			const uint32_t red =   ( t%1000 * ((color1 >> 16) & 0xff) + (1000-t%1000) * ((color0 >> 16) & 0xff) )/1000; // mixing colors takes 44µs
-			const uint32_t green = ( t%1000 * ((color1 >>  8) & 0xff) + (1000-t%1000) * ((color0 >>  8) & 0xff) )/1000;
-			const uint32_t blue =  ( t%1000 * ((color1 >>  0) & 0xff) + (1000-t%1000) * ((color0 >>  0) & 0xff) )/1000;
-			return COLOR(red,green,blue);
+		virtual Color color(const uint32_t t){
+			const uint8_t slot = (t>>8)&0xff;
+			const Color color0 = palette->color(slot);
+			const Color color1 = palette->color(slot + 1);
+			return Color(mix(color1.r,color0.r,t),
+					     mix(color1.g,color0.g,t),
+						 mix(color1.b,color0.b,t));
 		}
 };
 

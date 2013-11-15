@@ -9,9 +9,9 @@
 class DelayModule : public Module {
 	uint32_t delay_until = 0;
 	public:
-	virtual uint32_t loop_delayed() = 0;
+	virtual uint16_t loop_delayed() = 0;
 	virtual void loop(){
-		if (NOW > delay_until)
+		if (NOW >= delay_until)
 			delay_until = NOW + loop_delayed();
 	}
 };

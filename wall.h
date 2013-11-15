@@ -42,7 +42,8 @@ class Wall {
 			boards = new BoardList(board, offset_x, offset_y);
 		}
 	}
-	void set(const uint8_t x, const uint8_t y, const uint32_t color){
+	template<typename T>
+	void set(const uint8_t x, const uint8_t y, const T color){
 		BoardList* board = getBoard(x,y);
 		if (board)
 			board->board->set(x-board->offset_x, y-board->offset_y, color);
@@ -70,7 +71,8 @@ class Wall {
 			next = next->next;
 		}
 	}
-	void set(const uint32_t color){
+	template<typename T>
+	void set(const T color){
 		BoardList* next = boards;
 		while(next){
 			next->board->set(color);

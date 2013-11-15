@@ -3,6 +3,8 @@
 
 #include <Adafruit_NeoPixel.h>
 
+#include "util/color.h"
+
 #define NO_PIXEL 255
 
 class Board{
@@ -21,6 +23,9 @@ class Board{
 	void set(const uint8_t x, const uint8_t y, const uint32_t color){
 		strip->setPixelColor(id(x,y),color);
 	}
+	void set(const uint8_t x, const uint8_t y, const Color& color){
+		strip->setPixelColor(id(x,y),color.r,color.g,color.b);
+	}
 	uint32_t get(const uint8_t x, const uint8_t y){
 		return strip->getPixelColor(id(x,y));
 	}
@@ -34,8 +39,11 @@ class Board{
 		strip->setBrightness(brightness);
 	}
 	void set(const uint32_t color){
+		set(Color(color));
+	}
+	void set(const Color& color){
 		for(uint8_t i=0;i<strip->numPixels();i++)
-			strip->setPixelColor(i,color);
+			strip->setPixelColor(i,color.r,color.g,color.b);
 	}
 };
 

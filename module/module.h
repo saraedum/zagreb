@@ -4,8 +4,6 @@
 class Module {
 	public:
 	virtual void loop() = 0;
-	virtual void setup(){}
-	virtual void shutdown(){}
 };
 
 #endif

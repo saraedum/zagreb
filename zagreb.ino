@@ -5,16 +5,11 @@
 #include "progmem_board.h"
 #include <Adafruit_NeoPixel.h>
 
-//#include "module/test_strip.h"
-//#include "module/test_wall.h"
-//#include "module/solid_fade.h"
 #include "module/fade/linear_fade.h"
 #include "module/palette/random_palette.h"
 #include "module/palette/black_palette.h"
 #include "module/dist/random_dist.h"
 #include "module/dist_fade.h"
-#include "module/fps.h"
-#include "util/now.h"
 
 #define UNCONNECTED_ANALOG_PIN 5
 
@@ -81,22 +76,12 @@ void setup() {
 	RandomPalette pal(hwrandom(UNCONNECTED_ANALOG_PIN));
 	BlackPalette pal2(&pal, 3, 2);
 	LinearFade fade(&pal2);
-	//SolidFade m(&wall, &fade);
 	RandomDist dist(wall.height,wall.width,hwrandom(UNCONNECTED_ANALOG_PIN));
 	DistFade m(&wall, &fade, &dist);
-	//TestWall t(&wall);
-	//t.setup();
-	m.setup();
-	FPS fps;
-	Profiler loop("while");
+	NOW = millis();
 	while(1){
-		loop.enter();
-		NOW = millis();
 		m.loop();
-		fps.loop();
-		loop.exit();
 	}
-	m.shutdown();
 }
 
 void loop() {}
