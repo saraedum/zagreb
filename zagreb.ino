@@ -70,7 +70,6 @@ ProgmemBoard* const board11 = new ProgmemBoard(strip11, 4, 5, id11);
 Wall wall(13, 10);
 
 void setup() {
-
 	wall.add(board3,0,0);
 	wall.add(board5,0,5);
 	wall.add(board6,4,0);

@@ -13,6 +13,7 @@ class FPS : public Module{
 	public:
 		FPS():start(NOW),frames(0){
 			Serial.begin(9600);
+			Serial.println("FPS: Enabled.");
 		}
 		virtual void loop(){
 			frames++;

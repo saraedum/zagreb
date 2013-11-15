@@ -4,6 +4,8 @@
 #include "module.h"
 #include "../util/now.h"
 
+#define HZ(hz) (1000/hz)
+
 class DelayModule : public Module {
 	uint32_t delay_until = 0;
 	public:
