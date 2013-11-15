@@ -19,7 +19,7 @@ class DistFade : public DelayModule {
 				for (uint8_t x=0;x<wall->width;x++){
 					if (!wall->has(x,y))
 						continue;
-					wall->set(x,y,fade->color(NOW + dist->dist(x,y)*scale/dist->max_dist));
+					wall->set(x,y,fade->color(NOW + dist->dist(x,y)*scale/dist->max_dist)); // set takes 23µs
 				}
 			}
 			wall->show();

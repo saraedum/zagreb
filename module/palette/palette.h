@@ -3,7 +3,7 @@
 
 class Palette {
 	public:
-		virtual uint32_t color(uint32_t n) = 0;
+		virtual uint32_t color(const uint8_t n) = 0;
 };
 
 #endif

@@ -1,4 +1,6 @@
 // vim:syntax=cpp
+#include "util/profiler.h"
+
 #include "wall.h"
 #include "progmem_board.h"
 #include <Adafruit_NeoPixel.h>
@@ -86,10 +88,13 @@ void setup() {
 	//t.setup();
 	m.setup();
 	FPS fps;
+	Profiler loop("while");
 	while(1){
+		loop.enter();
 		NOW = millis();
 		m.loop();
 		fps.loop();
+		loop.exit();
 	}
 	m.shutdown();
 }
