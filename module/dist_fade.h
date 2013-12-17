@@ -15,7 +15,7 @@ class DistFade : public WallModule<DistFade> {
 		DistFade(Wall* const wall, Fade* const fade, Dist* const dist, uint32_t scale=2000):WallModule(wall),fade(fade),dist(dist),scale(scale){}
 		inline void draw(){
 			const uint32_t dst = dist->dist(x,y);
-			const uint32_t t = (NOW + dst*scale/dist->max_dist)/4;
+			const uint32_t t = (now() + dst*scale/dist->max_dist)/4;
 			Color col = fade->color(t);
 			wall->set(x,y,col);
 		}

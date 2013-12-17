@@ -78,7 +78,6 @@ void setup() {
 	LinearFade fade(&pal2);
 	RandomDist dist(wall.height,wall.width,hwrandom(UNCONNECTED_ANALOG_PIN));
 	DistFade m(&wall, &fade, &dist);
-	NOW = millis();
 	while(1){
 		m.loop();
 	}

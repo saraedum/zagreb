@@ -11,8 +11,8 @@ class DelayModule : public Module {
 	public:
 	virtual uint16_t loop_delayed() = 0;
 	virtual void loop(){
-		if (NOW >= delay_until)
-			delay_until = NOW + loop_delayed();
+		if (now() >= delay_until)
+			delay_until = now() + loop_delayed();
 	}
 };
 

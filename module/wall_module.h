@@ -14,7 +14,7 @@ class WallModule : public DelayModule {
 		FPS fps;
 		const uint8_t delay=HZ(60);
 	public:
-		WallModule(Wall* const wall):wall(wall),last(NOW){}
+		WallModule(Wall* const wall):wall(wall),last(now()){}
 		virtual uint16_t loop_delayed(){
 			if (x>=wall->width){
 				x=0;
@@ -22,12 +22,12 @@ class WallModule : public DelayModule {
 			}
 			if (y>=wall->height){
 				y=0;
-				NOW = millis();
+				update_now();
 				fps.loop();
 				wall->show();
-				if (last + delay < NOW)
+				if (last + delay < now())
 					return 0;
-				return last + delay - NOW;
+				return last + delay - now();
 			}else if(wall->has(x,y)){
 				static_cast<DerivedModule*>(this)->draw();
 			}
