@@ -10,8 +10,15 @@
 #include "module/palette/black_palette.h"
 #include "module/dist/random_dist.h"
 #include "module/dist_fade.h"
+#include "module/linear_rotary_encoder.h"
 
 #define UNCONNECTED_ANALOG_PIN 5
+#define BPM_PIN_0 A0
+#define BPM_PIN_1 A1
+#define BRIGHTNESS_PIN0 A2
+#define BRIGHTNESS_PIN1 A3
+
+uint8_t BRIGHTNESS=255;
 
 const uint8_t id3[] PROGMEM = { 15, 14, 5, 4,
                                 16, 13, 6, 3,
@@ -66,6 +73,11 @@ ProgmemBoard* const board11 = new ProgmemBoard(strip11, 4, 5, id11);
 
 Wall wall(13, 10);
 
+Module* current = 0;
+Module* bpm_encoder = new LinearRotaryEncoder<uint16_t>(BPM_PIN_0, BPM_PIN_1, 1, 1000, &BPM, 1);
+#include "module/brightness.h"
+Module* brightness_encoder = new Brightness(BRIGHTNESS_PIN0, BRIGHTNESS_PIN1);
+
 void setup() {
 	wall.add(board3,0,0);
 	wall.add(board5,0,5);
@@ -73,14 +85,15 @@ void setup() {
 	wall.add(board9,8,0);
 	wall.add(board10,12,0);
 	wall.add(board11,4,5);
-	RandomPalette pal(hwrandom(UNCONNECTED_ANALOG_PIN));
-	BlackPalette pal2(&pal, 3, 2);
-	LinearFade fade(&pal2);
-	RandomDist dist(wall.height,wall.width,hwrandom(UNCONNECTED_ANALOG_PIN));
-	DistFade m(&wall, &fade, &dist);
-	while(1){
-		m.loop();
-	}
+	RandomPalette* pal=new RandomPalette(hwrandom(UNCONNECTED_ANALOG_PIN));
+	BlackPalette* pal2=new BlackPalette(pal, 3, 2);
+	LinearFade* fade=new LinearFade(pal2);
+	RandomDist* dist=new RandomDist(wall.height,wall.width,hwrandom(UNCONNECTED_ANALOG_PIN));
+	current = new DistFade(&wall, fade, dist);
 }
 
-void loop() {}
+void loop() {
+	current->loop();
+	bpm_encoder->loop();
+	brightness_encoder->loop();
+}
