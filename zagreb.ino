@@ -16,11 +16,6 @@ uint8_t BRIGHTNESS = 255;
 Wall wall(13, 10);
 
 #include "module/brightness.h"
-#include "module/fade/linear_fade.h"
-#include "module/palette/random_palette.h"
-#include "module/palette/black_palette.h"
-#include "module/dist/random_dist.h"
-#include "module/dist_fade.h"
 #include "module/linear_rotary_encoder.h"
 #include "module/control.h"
 
@@ -76,7 +71,6 @@ Adafruit_NeoPixel* const strip11 = new Adafruit_NeoPixel(19, 11, NEO_GRB + NEO_K
 ProgmemBoard* const board11 = new ProgmemBoard(strip11, 4, 5, id11);
 
 Control control;
-Module* current = 0;
 LinearRotaryEncoder<uint16_t> bpm_encoder(BPM_PIN_0, BPM_PIN_1, 1, 1000, &BPM, 1);
 Brightness brightness_encoder(BRIGHTNESS_PIN0, BRIGHTNESS_PIN1);
 
@@ -87,17 +81,11 @@ void setup() {
 	wall.add(board9,8,0);
 	wall.add(board10,12,0);
 	wall.add(board11,4,5);
-	RandomPalette* pal=new RandomPalette(hwrandom(UNCONNECTED_ANALOG_PIN));
-	BlackPalette* pal2=new BlackPalette(pal, 3, 2);
-	LinearFade* fade=new LinearFade(pal2);
-	RandomDist* dist=new RandomDist(wall.height,wall.width,hwrandom(UNCONNECTED_ANALOG_PIN));
-	current = new DistFade(&wall, fade, dist);
 }
 
 void loop() {
 	control.loop();
-	if (current)
-		current->loop();
+	Control::main->loop();
 	bpm_encoder.loop();
 	brightness_encoder.loop();
 }

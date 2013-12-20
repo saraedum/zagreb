@@ -1,5 +1,5 @@
 #ifndef LINEAR_FADE_H
-#define LINEAR_FADE
+#define LINEAR_FADE_H
 
 #include "fade.h"
 #include "../../util/color.h"

@@ -3,7 +3,7 @@
 
 class Module {
 	public:
-	virtual void loop() = 0;
+		virtual void loop() = 0;
 };
 
 #endif

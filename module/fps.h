@@ -3,6 +3,7 @@
 
 #include "module.h"
 #include "../util/now.h"
+#include "../util/free.h"
 
 #define FPS_RESOLUTION 5000
 

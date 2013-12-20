@@ -3,6 +3,7 @@
 
 #include "dist.h"
 #include "../../util/random.h"
+#include "../../util/assert.h"
 
 class RandomDist : public Dist {
 	private:
@@ -10,10 +11,14 @@ class RandomDist : public Dist {
 	public:
 		RandomDist(const uint32_t width, const uint32_t height, const uint32_t seed):Dist(width,height){
 			d = (uint8_t*)malloc(sizeof(uint8_t)*width*height);
+			assert(d);
 			Random rand(seed);
 			for (uint32_t i=0;i<width*height;i++)
 				d[i] = rand.randrange(0,255);
 			compute_max_dist();
+		}
+		virtual ~RandomDist(){
+			free(d);
 		}
 		virtual uint32_t dist(const uint8_t x, const uint8_t y){
 			return d[width*y + x];
