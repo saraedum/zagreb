@@ -5,20 +5,24 @@
 #include "progmem_board.h"
 #include <Adafruit_NeoPixel.h>
 
+#define UNCONNECTED_ANALOG_PIN 5
+#define BPM_PIN_0 A0
+#define BPM_PIN_1 A1
+#define BRIGHTNESS_PIN0 A2
+#define BRIGHTNESS_PIN1 A3
+#define BUTTON_PIN_0 2
+#define BUTTON_PIN_1 4
+uint8_t BRIGHTNESS = 255;
+Wall wall(13, 10);
+
+#include "module/brightness.h"
 #include "module/fade/linear_fade.h"
 #include "module/palette/random_palette.h"
 #include "module/palette/black_palette.h"
 #include "module/dist/random_dist.h"
 #include "module/dist_fade.h"
 #include "module/linear_rotary_encoder.h"
-
-#define UNCONNECTED_ANALOG_PIN 5
-#define BPM_PIN_0 A0
-#define BPM_PIN_1 A1
-#define BRIGHTNESS_PIN0 A2
-#define BRIGHTNESS_PIN1 A3
-
-uint8_t BRIGHTNESS=255;
+#include "module/control.h"
 
 const uint8_t id3[] PROGMEM = { 15, 14, 5, 4,
                                 16, 13, 6, 3,
@@ -71,12 +75,10 @@ const uint8_t id11[] PROGMEM = { 18, 17, 16, 15,
 Adafruit_NeoPixel* const strip11 = new Adafruit_NeoPixel(19, 11, NEO_GRB + NEO_KHZ800);
 ProgmemBoard* const board11 = new ProgmemBoard(strip11, 4, 5, id11);
 
-Wall wall(13, 10);
-
+Control control;
 Module* current = 0;
-Module* bpm_encoder = new LinearRotaryEncoder<uint16_t>(BPM_PIN_0, BPM_PIN_1, 1, 1000, &BPM, 1);
-#include "module/brightness.h"
-Module* brightness_encoder = new Brightness(BRIGHTNESS_PIN0, BRIGHTNESS_PIN1);
+LinearRotaryEncoder<uint16_t> bpm_encoder(BPM_PIN_0, BPM_PIN_1, 1, 1000, &BPM, 1);
+Brightness brightness_encoder(BRIGHTNESS_PIN0, BRIGHTNESS_PIN1);
 
 void setup() {
 	wall.add(board3,0,0);
@@ -93,7 +95,9 @@ void setup() {
 }
 
 void loop() {
-	current->loop();
-	bpm_encoder->loop();
-	brightness_encoder->loop();
+	control.loop();
+	if (current)
+		current->loop();
+	bpm_encoder.loop();
+	brightness_encoder.loop();
 }
