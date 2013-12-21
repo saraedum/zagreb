@@ -26,8 +26,9 @@ class Wall {
 		}
 		return 0;
 	}
-	BoardList* boards = 0;
 	public:
+	BoardList* boards = 0; // for enumerate_boards
+
 	Wall(const uint8_t width, const uint8_t height):width(width),height(height){}
 	const uint8_t width;
 	const uint8_t height;

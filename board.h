@@ -9,7 +9,6 @@
 
 class Board{
 	protected:
-	Adafruit_NeoPixel* const strip;
 	Board(Adafruit_NeoPixel* const strip, const uint8_t width, const uint8_t height):strip(strip),width(width),height(height){
 		strip->begin();
 		strip->setBrightness(255);
@@ -17,6 +16,7 @@ class Board{
 	}
 	virtual uint8_t id(const uint8_t x, const uint8_t y) = 0;
 	public:
+	Adafruit_NeoPixel* const strip; // for EnumerateBoards
 	const uint8_t width;
 	const uint8_t height;
 

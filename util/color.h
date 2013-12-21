@@ -11,6 +11,9 @@ class Color{
 			g = ((uint16_t)g*(uint16_t)brightness)/255;
 			b = ((uint16_t)b*(uint16_t)brightness)/255;
 		}
+		uint32_t color(){
+			return (((uint32_t)r)<<16) | (((uint32_t)g)<<8) | (uint32_t)b;
+		}
 };
 
 #endif

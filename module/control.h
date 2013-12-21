@@ -6,7 +6,8 @@
 #include "../composition/vertical_fade.h"
 #include "../composition/horizontal_fade.h"
 #include "../composition/central_fade.h"
-#include "../composition/white.h"
+#include "../composition/solid.h"
+#include "../composition/enumerate.h"
 
 #define CONTROL_DELAY HZ(60)
 
@@ -14,7 +15,7 @@ class Control : public DelayModule {
 	private:
 		uint8_t last_button0=LOW;
 		uint8_t last_button1=LOW;
-		int mode = 0;
+		int mode = -2;
 
 		void on_button0(){
 			next();
@@ -35,8 +36,14 @@ class Control : public DelayModule {
 				current = 0;
 			}
 			switch(++mode){
+				case -1:
+					current = new Enumerate(&wall);
+					break;
+				case 0:
+					current = new Solid(&wall, Color(255,255,255));
+					break;
 				case 1:
-					current = new White(&wall);
+					current = new Solid(&wall, Color(hash(hwrandom(UNCONNECTED_ANALOG_PIN))));
 					break;
 				case 2:
 					current = new VerticalFade(&wall);
