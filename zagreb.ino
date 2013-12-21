@@ -16,7 +16,7 @@
 uint8_t BRIGHTNESS = 255;
 bool STROBO = false;
 bool SOUND_BRIGHTNESS = true;
-Wall wall(13, 10);
+	Wall wall(25, 5);
 
 #include "module/sound_energy.h"
 SoundEnergy sound_energy;
@@ -26,48 +26,43 @@ SoundBrightness sound_brightness(sound_energy);
 #include "module/linear_rotary_encoder.h"
 #include "module/control.h"
 
-const uint8_t id3[] PROGMEM = { 15, 14, 5, 4,
-                                16, 13, 6, 3,
-                                17, 12, 7, 2,
-                                18, 11, 8, 1,
-                                19, 10, 9, 0, };
-Adafruit_NeoPixel* const strip3 = new Adafruit_NeoPixel(20, 3, NEO_GRB + NEO_KHZ800);
-ProgmemBoard* const board3 = new ProgmemBoard(strip3, 4, 5, id3);
+const uint8_t id3[] PROGMEM = {  12, 13,14,15,
+                                 11, 10, 9, 8,
+                                  4,  5, 6, 7,
+                                  3,  2, 1, 0 };
+Adafruit_NeoPixel* const strip3 = new Adafruit_NeoPixel(16, 3, NEO_GRB + NEO_KHZ800);
+ProgmemBoard* const board3 = new ProgmemBoard(strip3, 4, 4, id3);
 
-const uint8_t id5[] PROGMEM = { 19, 10, 9, 0,
-                                18, 11, 8, 1,
-                                17, 12, 7, 2,
+const uint8_t id5[] PROGMEM = { 15, 14, 5, 4,
                                 16, 13, 6, 3,
-								15, 14, 5, 4, };
+                                17, 12, 7, 2,
+                                18, 11, 8, 1,
+								19, 10, 9, 0, };
 Adafruit_NeoPixel* const strip5 = new Adafruit_NeoPixel(20, 5, NEO_GRB + NEO_KHZ800);
 ProgmemBoard* const board5 = new ProgmemBoard(strip5, 4, 5, id5);
 
-const uint8_t id6[] PROGMEM = { 4, 5, 14, 15,
+const uint8_t id6[] PROGMEM = { 15, 14,13,12,
+                                 8,  9,10,11,
+                                 7,  6, 5, 4,
+                                 0,  1, 2, 3, };
+Adafruit_NeoPixel* const strip6 = new Adafruit_NeoPixel(16, 6, NEO_GRB + NEO_KHZ800);
+ProgmemBoard* const board6 = new ProgmemBoard(strip6, 4, 4, id6);
+
+const uint8_t id9[] PROGMEM = { 4, 5, 14, 15,
 								3, 6, 13, 16,
 								2, 7, 12, 17,
 								1, 8, 11, 18,
 								0, 9, 10, 19, };
-Adafruit_NeoPixel* const strip6 = new Adafruit_NeoPixel(20, 6, NEO_GRB + NEO_KHZ800);
-ProgmemBoard* const board6 = new ProgmemBoard(strip6, 4, 5, id6);
+Adafruit_NeoPixel* const strip9 = new Adafruit_NeoPixel(20, 9, NEO_GRB + NEO_KHZ800);
+ProgmemBoard* const board9 = new ProgmemBoard(strip9, 4, 5, id9);
 
-const uint8_t id9[] PROGMEM = { 8, 9, 10, 11,
-								7, 6,  5,  4,
-								0, 1,  2,  3, };
-Adafruit_NeoPixel* const strip9 = new Adafruit_NeoPixel(12, 9, NEO_GRB + NEO_KHZ800);
-ProgmemBoard* const board9 = new ProgmemBoard(strip9, 4, 3, id9);
-
-const uint8_t id10[] PROGMEM = { 0,
-								 1,
-								 2,
-								 3,
-								 4,
-								 5,
-								 6,
-								 7,
-								 8,
-								 9, };
-Adafruit_NeoPixel* const strip10 = new Adafruit_NeoPixel(10, 10, NEO_GRB + NEO_KHZ800);
-ProgmemBoard* const board10 = new ProgmemBoard(strip10, 1, 10, id10);
+const uint8_t id10[] PROGMEM = { 4, 5, 14, 15,
+								3, 6, 13, 16,
+								2, 7, 12, 17,
+								1, 8, 11, 18,
+								0, 9, 10, 19, };
+Adafruit_NeoPixel* const strip10 = new Adafruit_NeoPixel(20, 10, NEO_GRB + NEO_KHZ800);
+ProgmemBoard* const board10 = new ProgmemBoard(strip10, 4, 5, id10);
 
 const uint8_t id11[] PROGMEM = { 18, 17, 16, 15,
 								 11, 12, 13, 14,
@@ -83,11 +78,11 @@ Brightness brightness_encoder(BRIGHTNESS_PIN0, BRIGHTNESS_PIN1);
 
 void setup() {
 	wall.add(board3,0,0);
-	wall.add(board5,0,5);
-	wall.add(board6,4,0);
+	wall.add(board5,4,0);
+	wall.add(board6,21,0);
 	wall.add(board9,8,0);
-	wall.add(board10,12,0);
-	wall.add(board11,4,5);
+	wall.add(board10,16,0);
+	wall.add(board11,12,0);
 }
 
 void loop() {
