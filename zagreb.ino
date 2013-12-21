@@ -10,11 +10,18 @@
 #define BPM_PIN_1 A1
 #define BRIGHTNESS_PIN0 A2
 #define BRIGHTNESS_PIN1 A3
+#define MIC_PIN 4
 #define BUTTON_PIN_0 2
 #define BUTTON_PIN_1 4
 uint8_t BRIGHTNESS = 255;
+bool STROBO = false;
+bool SOUND_BRIGHTNESS = true;
 Wall wall(13, 10);
 
+#include "module/sound_energy.h"
+SoundEnergy sound_energy;
+#include "module/sound_brightness.h"
+SoundBrightness sound_brightness(sound_energy);
 #include "module/brightness.h"
 #include "module/linear_rotary_encoder.h"
 #include "module/control.h"
@@ -88,4 +95,8 @@ void loop() {
 	Control::main->loop();
 	bpm_encoder.loop();
 	brightness_encoder.loop();
+	if (SOUND_BRIGHTNESS){
+		sound_energy.loop();
+		sound_brightness.loop();
+	}
 }

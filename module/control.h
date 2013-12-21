@@ -6,6 +6,7 @@
 #include "../composition/vertical_fade.h"
 #include "../composition/horizontal_fade.h"
 #include "../composition/central_fade.h"
+#include "../composition/white.h"
 
 #define CONTROL_DELAY HZ(60)
 
@@ -19,7 +20,15 @@ class Control : public DelayModule {
 			next();
 		}
 		Composition* current;
-		void on_button1(){}
+		void on_button1(){
+			if (STROBO){
+				STROBO = false;
+			}else if (SOUND_BRIGHTNESS){
+				SOUND_BRIGHTNESS = false;
+			}else{
+				STROBO = SOUND_BRIGHTNESS = true;
+			}
+		}
 		void next(){
 			if (current){
 				delete(current);
@@ -27,7 +36,7 @@ class Control : public DelayModule {
 			}
 			switch(++mode){
 				case 1:
-					current = new RandomDistFade(&wall);
+					current = new White(&wall);
 					break;
 				case 2:
 					current = new VerticalFade(&wall);
@@ -37,6 +46,9 @@ class Control : public DelayModule {
 					break;
 				case 4:
 					current = new CentralFade(&wall);
+					break;
+				case 5:
+					current = new RandomDistFade(&wall);
 					break;
 				default:
 					mode=0;

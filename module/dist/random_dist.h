@@ -9,11 +9,11 @@ class RandomDist : public Dist {
 	private:
 		uint8_t* d;
 	public:
-		RandomDist(const uint32_t width, const uint32_t height, const uint32_t seed):Dist(width,height){
-			d = (uint8_t*)malloc(sizeof(uint8_t)*width*height);
+		RandomDist(const uint8_t width, const uint8_t height, const uint32_t seed):Dist(width,height){
+			d = (uint8_t*)malloc(sizeof(uint8_t)*(uint16_t)width*(uint16_t)height);
 			assert(d);
 			Random rand(seed);
-			for (uint32_t i=0;i<width*height;i++)
+			for (uint32_t i=0;i<(uint16_t)width*(uint16_t)height;i++)
 				d[i] = rand.randrange(0,255);
 			compute_max_dist();
 		}

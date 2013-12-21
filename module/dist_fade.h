@@ -17,6 +17,8 @@ class DistFade : public WallModule<DistFade> {
 			const uint32_t dst = dist->dist(x,y);
 			const uint32_t t = (now() + dst*2000/dist->max_dist)*BPM/60;
 			Color col = fade->color(t);
+			if (SOUND_BRIGHTNESS)
+				col.scale(sound_brightness.brightness);
 			wall->set(x,y,col);
 		}
 };

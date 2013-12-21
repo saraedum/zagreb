@@ -1,20 +1,19 @@
 #ifndef SOLID_FADE_H
 #define SOLID_FADE_H
 
-#include "delay_module.h"
 #include "fade/fade.h"
-#include "../wall.h"
+#include "wall_module.h"
 
-class SolidFade : public DelayModule {
+class SolidFade : public WallModule<SolidFade> {
 	private:
-		Wall* const wall;
 		Fade* const fade;
 	public:
-		SolidFade(Wall* const wall, Fade* const fade):wall(wall),fade(fade){}
-		virtual uint32_t loop_delayed(){
-			wall->set(fade->color(millis()));
-			wall->show();
-			return 20;
+		SolidFade(Wall* const wall, Fade* const fade):WallModule(wall),fade(fade){}
+		virtual void draw(){
+			Color color = fade->color(millis());
+			if (SOUND_BRIGHTNESS)
+				color.scale(sound_brightness.brightness);
+			wall->set(x,y,color);
 		}
 };
 
