@@ -23,7 +23,7 @@ class EnumerateBoards : public DelayModule {
 				board->strip->setPixelColor(i,board->strip->getPixelColor(i)==RED?BLACK:RED);
 				board->strip->show();
 			}
-			i=(i+1)%20;
+			i=(i+1)%32;
 			return 100;
 		}
 };

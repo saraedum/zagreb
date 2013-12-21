@@ -41,11 +41,11 @@ const uint8_t id5[] PROGMEM = { 15, 14, 5, 4,
 Adafruit_NeoPixel* const strip5 = new Adafruit_NeoPixel(20, 5, NEO_GRB + NEO_KHZ800);
 ProgmemBoard* const board5 = new ProgmemBoard(strip5, 4, 5, id5);
 
-const uint8_t id6[] PROGMEM = { 15, 14,13,12,
-                                 8,  9,10,11,
-                                 7,  6, 5, 4,
-                                 0,  1, 2, 3, };
-Adafruit_NeoPixel* const strip6 = new Adafruit_NeoPixel(16, 6, NEO_GRB + NEO_KHZ800);
+const uint8_t id6[] PROGMEM = { 30, 28,26,24,
+                                 16,  18,20,22,
+                                 14,  12, 10, 8,
+                                 0,  2, 4, 6, };
+Adafruit_NeoPixel* const strip6 = new Adafruit_NeoPixel(32, 6, NEO_GRB + NEO_KHZ800);
 ProgmemBoard* const board6 = new ProgmemBoard(strip6, 4, 4, id6);
 
 const uint8_t id9[] PROGMEM = { 4, 5, 14, 15,
