@@ -15,7 +15,7 @@ class Control : public DelayModule {
 	private:
 		uint8_t last_button0=LOW;
 		uint8_t last_button1=LOW;
-		int mode = -2;
+		int mode = -1;
 
 		void on_button0(){
 			next();
