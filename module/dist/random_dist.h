@@ -14,7 +14,7 @@ class RandomDist : public Dist {
 			assert(d);
 			Random rand(seed);
 			for (uint32_t i=0;i<(uint16_t)width*(uint16_t)height;i++)
-				d[i] = rand.randrange(0,255);
+				d[i] = rand.randrange(0,256);
 			compute_max_dist();
 		}
 		virtual ~RandomDist(){
