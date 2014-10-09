@@ -40,7 +40,7 @@ class Control : public DelayModule {
 					current = new Enumerate(&wall);
 					break;
 				case 0:
-					current = new Solid(&wall, Color(255,255,255));
+					current = new Solid(&wall, Color(255,179,48));
 					break;
 				case 1:
 					current = new Solid(&wall, Color(hash(hwrandom(UNCONNECTED_ANALOG_PIN))));
