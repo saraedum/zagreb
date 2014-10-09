@@ -20,7 +20,7 @@ class RandomDistFade : public Composition {
 			pal(hwrandom(UNCONNECTED_ANALOG_PIN)), 
 			pal2(&pal, 3, 2), 
 			fade(&pal2), 
-			dist(wall->height, wall->width, hwrandom(UNCONNECTED_ANALOG_PIN)), 
+			dist(wall->width, wall->height, hwrandom(UNCONNECTED_ANALOG_PIN)), 
 			module(wall, &fade, &dist) {
 			main = &module;
 		}

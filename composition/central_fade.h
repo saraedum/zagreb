@@ -16,7 +16,7 @@ class CentralFade : public Composition {
 		CentralDist dist;
 		DistFade module;
 	public:
-		CentralFade(Wall* const wall):pal(hwrandom(UNCONNECTED_ANALOG_PIN)), pal2(&pal, 3, 2), fade(&pal2), dist(wall->height, wall->width) , module(wall, &fade, &dist) {
+		CentralFade(Wall* const wall):pal(hwrandom(UNCONNECTED_ANALOG_PIN)), pal2(&pal, 3, 2), fade(&pal2), dist(wall->width, wall->height) , module(wall, &fade, &dist) {
 			main = &module;
 		}
 };
