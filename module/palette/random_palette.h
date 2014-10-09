@@ -10,7 +10,7 @@ class RandomPalette : public Palette {
 		Color *palette;
 		uint8_t size;
 	public:
-		RandomPalette(uint32_t seed, uint8_t size=256):size(size){
+		RandomPalette(uint32_t seed, uint8_t size=128):size(size){
 			palette = (Color*)malloc(size*sizeof(Color));
 			assert(palette);
 			for(uint32_t n=0;n<size;n++)
