@@ -2,7 +2,7 @@
 #define VERTICAL_FADE_H
 
 #include "composition.h"
-#include "../module/palette/random_palette.h"
+#include "../module/palette/random_warm_palette.h"
 #include "../module/palette/black_palette.h"
 #include "../module/fade/linear_fade.h"
 #include "../module/dist_fade.h"
@@ -10,7 +10,7 @@
 
 class VerticalFade : public Composition {
 	private:
-		RandomPalette pal;
+		RandomWarmPalette pal;
 		BlackPalette pal2;
 		LinearFade fade;
 		VerticalDist dist;
