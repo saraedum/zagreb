@@ -8,7 +8,7 @@ class EnumerateBoards : public DelayModule {
 		Wall*const wall;
 		const uint32_t RED = Color(255,0,0).color();
 		const uint32_t BLACK = Color(0,0,0).color();
-		int i=0;
+		uint16_t i=0;
 	public:
 		EnumerateBoards(Wall* const wall):wall(wall){}
 		virtual void loop(){
