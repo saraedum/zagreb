@@ -14,9 +14,34 @@
 #define BUTTON_PIN_0 2
 #define BUTTON_PIN_1 4
 uint8_t BRIGHTNESS = 255;
-bool STROBO = false;
-bool SOUND_BRIGHTNESS = false;
 uint16_t COLORS512 = 2048; // 4 colors are visible at a time
+uint8_t BRIGHTNESS_DECAY = 0;
+uint8_t BRIGHTNESS_MODE  = 0;
+uint32_t STATS_UNTIL = 0;
+uint32_t NEXT_CYCLE = 0;
+
+#define FIRST_NON_BOOT_MODE 2
+#define FIRST_NON_BORING_MODE 3
+#define MODES 7
+#define CYCLE_MASK 0b10000000
+#define BOOT_MASK 0b01000000
+#define MODE_MASK 0b00111111
+#define CYCLE_DELAY 1000
+#define CYCLE_INCREASE 8
+#define CYCLE_LENGTH 60000L
+uint8_t MODE = BOOT_MASK | (MODES-1);
+bool is_cycle(){
+	return MODE&CYCLE_MASK;
+}
+
+bool is_boot(){
+	return MODE&BOOT_MASK;
+}
+
+uint8_t mode(){
+	return MODE&MODE_MASK;
+}
+
 Wall wall(13, 10);
 
 #include "module/sound_energy.h"

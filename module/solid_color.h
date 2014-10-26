@@ -10,7 +10,7 @@ class SolidColor : public WallModule<SolidColor> {
 		SolidColor(Wall* const wall, const Color color):WallModule(wall),color(color){}
 		virtual void draw(){
 			Color color = this->color;
-			if (SOUND_BRIGHTNESS)
+			if (BRIGHTNESS_MODE)
 				color.scale(sound_brightness.brightness);
 			wall->set(x,y,color);
 		}
