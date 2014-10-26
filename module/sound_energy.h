@@ -36,6 +36,8 @@ class SoundEnergy : public DelayModule {
 				ret+=sq_(sample[i]-mean);
 			if(ret>max_energy)
 				max_energy = ret;
+			if(max_energy<1)
+				max_energy = 1;
 			return ret;
 		}
 };
