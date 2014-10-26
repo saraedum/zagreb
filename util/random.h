@@ -48,6 +48,38 @@ class Random {
 			uint32_t l=b-a;
 			return random()%l + a;
 		}
+		bool randbit(){
+			return random()%2;
+		}
+		double randrange(double a, double b){
+			assert(b>a);
+			double ret = random();
+			ret /= (uint32_t)-1;
+			ret *= (b-a);
+			ret += a;
+			return ret;
+		}
+		double standard_gauss(){
+			double v1,v2,s;
+			do {
+				v1 = 2.0 * randrange(0.,1.) - 1;
+				v2 = 2.0 * randrange(0.,1.) - 1;
+				s = v1*v1 + v2*v2;
+			}while (s>= 1.0);
+			if (s==0.) return 0.;
+			return v1*sqrt(-2.*log(s)/s);
+		}
+		double gauss(double mu, double sigma){
+			return standard_gauss()*sigma + mu;
+		}
+		double gauss_clamp(double mu, double sigma, double lower, double upper){
+			double ret = gauss(mu,sigma);
+			if (ret<lower)
+				ret = lower;
+			if (ret>upper)
+				ret = upper;
+			return ret;
+		}
 };
 
 uint32_t hwrandom(const uint8_t pin){
