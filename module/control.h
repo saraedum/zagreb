@@ -8,6 +8,7 @@
 #include "../composition/central_fade.h"
 #include "../composition/solid.h"
 #include "../composition/enumerate.h"
+#include "../composition/align.h"
 
 #define CONTROL_DELAY HZ(60)
 
@@ -66,22 +67,25 @@ class Control : public DelayModule {
 				case 0:
 					current = new Enumerate(&wall);
 					break;
-				case 1:
-					current = new Solid(&wall, Color(255,179,48));
+			    case 1:
+					current = new Align(&wall);
 					break;
 				case 2:
-					current = new Solid(&wall, Color(hash(hwrandom(UNCONNECTED_ANALOG_PIN))));
+					current = new Solid(&wall, Color(255,179,48));
 					break;
 				case 3:
-					current = new VerticalFade(&wall);
+					current = new Solid(&wall, Color(hash(hwrandom(UNCONNECTED_ANALOG_PIN))));
 					break;
 				case 4:
-					current = new HorizontalFade(&wall);
+					current = new VerticalFade(&wall);
 					break;
 				case 5:
-					current = new CentralFade(&wall);
+					current = new HorizontalFade(&wall);
 					break;
 				case 6:
+					current = new CentralFade(&wall);
+					break;
+				case 7:
 					current = new RandomDistFade(&wall);
 					break;
 				default:
