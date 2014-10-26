@@ -3,7 +3,7 @@
 
 #include "delay_module.h"
 
-#define SAMPLE_SIZE 32
+#define SAMPLE_SIZE 64
 #define SAMPLE_FREQUENCY 0
 
 class SoundEnergy : public DelayModule {
