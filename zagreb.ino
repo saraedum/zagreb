@@ -16,6 +16,7 @@
 uint8_t BRIGHTNESS = 255;
 bool STROBO = false;
 bool SOUND_BRIGHTNESS = false;
+uint16_t COLORS512 = 2048; // 4 colors are visible at a time
 Wall wall(13, 10);
 
 #include "module/sound_energy.h"
@@ -91,7 +92,8 @@ ProgmemBoard* const board11 = new ProgmemBoard(strip11, 1, 10, id11);
 
 Control control;
 LinearRotaryEncoder<uint16_t> bpm_encoder(BPM_PIN_0, BPM_PIN_1, 1, 1000, &BPM, 1);
-Brightness brightness_encoder(BRIGHTNESS_PIN0, BRIGHTNESS_PIN1);
+//Brightness brightness_encoder(BRIGHTNESS_PIN0, BRIGHTNESS_PIN1);
+LinearRotaryEncoder<uint16_t> color_encoder(BRIGHTNESS_PIN0, BRIGHTNESS_PIN1, 128, 512*20, &COLORS512, 128);
 
 void setup() {
 	wall.add( board3,  0,  0);
@@ -106,8 +108,9 @@ void loop() {
 	control.loop();
 	Control::main->loop();
 	bpm_encoder.loop();
-	brightness_encoder.loop();
-	if (SOUND_BRIGHTNESS){
+	//brightness_encoder.loop();
+	color_encoder.loop();
+	if (BRIGHTNESS_MODE){
 		sound_energy.loop();
 		sound_brightness.loop();
 	}
