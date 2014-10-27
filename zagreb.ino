@@ -29,7 +29,7 @@ uint32_t NEXT_CYCLE = 0;
 #define CYCLE_DELAY 1000
 #define CYCLE_INCREASE 8
 #define CYCLE_LENGTH 60000L
-uint8_t MODE = BOOT_MASK | (MODES-1);
+uint8_t MODE = BOOT_MASK | MODE_MASK;
 bool is_cycle(){
 	return MODE&CYCLE_MASK;
 }
