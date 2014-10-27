@@ -85,6 +85,8 @@ class WallModule : public DelayModule {
 		}
 
 		inline void post(uint8_t x, uint8_t y){
+			if (is_boot())
+				return;
 			uint8_t c = mbeat()/1000%360;
 			if (c < 4){
 				if (!(TEXT[c][y]&(128>>x))){
