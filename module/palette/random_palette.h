@@ -18,7 +18,7 @@ class RandomPalette : public Palette {
 			return Color(hash(rand.random()) & 0xffffff);
 		}
 	public:
-		RandomPalette(uint32_t seed, uint8_t size=32):size(size),active_size(size/2),oldest_survivor(0),rand(seed){
+		RandomPalette(uint32_t seed, uint8_t size=64):size(size),active_size(size/2),oldest_survivor(0),rand(seed){
 			palette = (Color*)malloc(size*sizeof(Color));
 			assert(palette);
 			//for(uint32_t n=0;n<size;n++)
