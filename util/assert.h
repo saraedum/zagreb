@@ -12,11 +12,13 @@ void __assert(const char *__func, const char *__file, int __lineno, const char *
 	Serial.println(__lineno, DEC);
 	Serial.println(__sexp);
 	Serial.flush();
+  /*
 	wall.set(Color(255,0,0));
 	wall.setBrightness(255);
 	wall.show();
 	// abort program execution.
 	abort();
+  */
 }
 
 #endif

@@ -15,10 +15,10 @@ uint32_t hash(uint32_t n){
 	ret += ((char*)&n)[3];
 	ret += (ret << 10);
 	ret ^= (ret >> 6);
-    ret += (ret << 3);
-    ret ^= (ret >> 11);
-    ret += (ret << 15);
-    return ret;
+  ret += (ret << 3);
+  ret ^= (ret >> 11);
+  ret += (ret << 15);
+  return ret;
 }
 
 #endif

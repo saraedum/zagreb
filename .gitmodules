@@ -4,3 +4,9 @@
 [submodule "Adafruit_NeoPixel"]
 	path = Adafruit_NeoPixel
 	url = https://github.com/adafruit/Adafruit_NeoPixel.git
+[submodule "AceRoutine"]
+	path = AceRoutine
+	url = https://github.com/bxparks/AceRoutine.git
+[submodule "AceCommon"]
+	path = AceCommon
+	url = https://github.com/bxparks/AceCommon.git

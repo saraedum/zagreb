@@ -1,142 +1,172 @@
-// vim:syntax=cpp
-#include "util/profiler.h"
-
-#include "wall.h"
-#include "progmem_board.h"
-#include <Adafruit_NeoPixel.h>
-
 #define UNCONNECTED_ANALOG_PIN 5
-#define BPM_PIN_0 A0
-#define BPM_PIN_1 A1
-#define BRIGHTNESS_PIN0 A2
-#define BRIGHTNESS_PIN1 A3
-#define MIC_PIN 4
-#define BUTTON_PIN_0 2
-#define BUTTON_PIN_1 4
-uint8_t BRIGHTNESS = 255;
-uint16_t COLORS512 = 2048; // 4 colors are visible at a time
-uint8_t BRIGHTNESS_DECAY = 0;
-uint8_t BRIGHTNESS_MODE  = 0;
-uint32_t STATS_UNTIL = 0;
-uint32_t NEXT_CYCLE = 0;
 
-#define FIRST_NON_BOOT_MODE 3
-#define FIRST_NON_BORING_MODE 4
-#define MODES 8
-#define CYCLE_MASK 0b10000000
-#define BOOT_MASK 0b01000000
-#define MODE_MASK 0b00111111
-#define CYCLE_DELAY 1000
-#define CYCLE_INCREASE 8
-#define CYCLE_LENGTH 60000L
-uint8_t MODE = BOOT_MASK | MODE_MASK;
-bool is_cycle(){
-	return MODE&CYCLE_MASK;
+#include <Adafruit_NeoPixel.h>
+#include <AceRoutine.h>
+
+#include <avr/power.h>
+
+#include "inputs/linear_rotary_encoder.hpp"
+#include "inputs/button.hpp"
+#include "lights/white.hpp"
+#include "lights/kit.hpp"
+#include "lights/random_fades.hpp"
+#include "lights/strobe.hpp"
+#include "outputs/board.hpp"
+#include "outputs/wall.hpp"
+#include "palette/palette_rotation.hpp"
+#include "palette/random_warm_palette.hpp"
+#include "palette/black_palette.hpp"
+
+const uint8_t pin3BoardLayout[] PROGMEM = {
+  19, 18, 17, 16, 15,
+  10, 11, 12, 13, 14,
+   9,  8,  7,  6,  5,
+   0,  1,  2,  3,  4,
+};
+const uint8_t pin5BoardLayout[] PROGMEM = {
+  11, 10,  9,  8,
+   4,  5,  6,  7,
+   3,  2,  1,  0,
+};
+const uint8_t pin6BoardLayout[] PROGMEM = {
+  19, 18, 17, 16, 15,
+  10, 11, 12, 13, 14,
+   9,  8,  7,  6,  5,
+   0,  1,  2,  3,  4,
+};
+const uint8_t pin9BoardLayout[] PROGMEM = {
+   0,  1,  2,  3,  4,
+   9,  8,  7,  6,  5,
+  10, 11, 12, 13, 14,
+  19, 18, 17, 16, 15,
+};
+const uint8_t pin10BoardLayout[] PROGMEM = {
+   0,  7,  8, 15,
+   1,  6,  9, 14,
+   2,  5, 10, 13,
+   3,  4, 11, 12,
+};
+const uint8_t pin11BoardLayout[] PROGMEM = {
+   0,  1,  2,  3,
+   7,  6,  5,  4,
+   8,  9, 10, 11,
+  15, 14, 13, 12,
+};
+
+using namespace zagreb;
+
+void runCoroutines() {}
+
+template <typename Head, typename ...Tail>
+void runCoroutines(Head& head, Tail&... tail) {
+  head.runCoroutine();
+  runCoroutines(tail...);
 }
 
-bool is_boot(){
-	return MODE&BOOT_MASK;
+void setup(){
+  Serial.begin(57600);
+  outputs::Board pin3Board(3, 5, 4, pin3BoardLayout);
+  outputs::Board pin5Board(5, 4, 3, pin5BoardLayout);
+  outputs::Board pin6Board(6, 5, 4, pin6BoardLayout);
+  outputs::Board pin9Board(9, 5, 4, pin9BoardLayout);
+  outputs::Board pin10Board(10, 4, 4, pin10BoardLayout);
+  outputs::Board pin11Board(11, 4, 4, pin11BoardLayout);
+
+  outputs::Wall wall;
+  wall.add(&pin3Board,  5, 0);
+  wall.add(&pin5Board,  0, 0);
+  wall.add(&pin6Board, 15, 0);
+  wall.add(&pin9Board, 10, 0);
+  wall.add(&pin10Board, 13, 4);
+  wall.add(&pin11Board, 13, 8);
+
+  inputs::LinearRotaryEncoder<uint8_t> brightness(A2, A3, 0, 255, &wall.brightness, 4);
+
+  uint8_t MODE = 0;
+
+  auto onModeSwitch = [](void* data) {
+    uint8_t& mode = *static_cast<uint8_t*>(data);
+    mode++;
+  };
+
+  inputs::Button modeSwitch(2, onModeSwitch, &MODE);
+
+  while(true){ 
+    switch(MODE) {
+      case 0:
+        {
+          lights::White white(&wall);
+
+          inputs::LinearRotaryEncoder<uint8_t> temperature(A0, A1, 0, 255, &white.temperature, 4);
+
+          while(MODE == 0) runCoroutines(modeSwitch, white, temperature, brightness);
+        }
+        break;
+      case 1:
+        {
+          lights::Kit kit(&wall);
+
+          lights::Strobe strobe(&wall);
+
+          auto onStrobeSwitch = [](void* data) {
+            lights::Strobe& strobe = *static_cast<lights::Strobe*>(data);
+            strobe.flash();
+          };
+
+          inputs::Button strobeSwitch(4, onStrobeSwitch, &strobe);
+
+          inputs::LinearRotaryEncoder<float> speed(A0, A1, 0, .2, &kit.speed, .001);
+
+          while(MODE == 1) runCoroutines(modeSwitch, kit, brightness, strobeSwitch, speed);
+        }
+        break;
+      case 2:
+        {
+          lights::Kit kit(&wall);
+
+          lights::Strobe strobe(&wall);
+
+          auto onStrobeSwitch = [](void* data) {
+            lights::Strobe& strobe = *static_cast<lights::Strobe*>(data);
+            strobe.flash();
+          };
+
+          inputs::Button strobeSwitch(4, onStrobeSwitch, &strobe);
+
+          inputs::LinearRotaryEncoder<float> speed(A0, A1, 0, .2, &kit.speed, .001);
+
+          palette::RandomWarmPalette palette(hwrandom(UNCONNECTED_ANALOG_PIN));
+          palette::PaletteRotation rotation(&palette, &kit.fill);
+
+          while(MODE == 2) runCoroutines(modeSwitch, kit, brightness, strobeSwitch, speed, rotation);
+        }
+        break;
+      case 3:
+        {
+          palette::RandomWarmPalette palette(hwrandom(UNCONNECTED_ANALOG_PIN));
+          palette::BlackPalette<2, 1> black(&palette);
+
+          lights::RandomFades fades(&wall, &black); 
+
+          lights::Strobe strobe(&wall);
+
+          auto onStrobeSwitch = [](void* data) {
+            lights::Strobe& strobe = *static_cast<lights::Strobe*>(data);
+            strobe.flash();
+          };
+
+          inputs::Button strobeSwitch(4, onStrobeSwitch, &strobe);
+
+          inputs::LinearRotaryEncoder<float> speed(A0, A1, 0, .2, &fades.speed, .001);
+
+          while(MODE == 3) runCoroutines(modeSwitch, fades, brightness, strobeSwitch, speed);
+        }
+        break;
+      default:
+        MODE = 0;
+        break;
+    }
+  }
 }
 
-uint8_t mode(){
-	return MODE&MODE_MASK;
-}
-
-Wall wall(13, 10);
-
-#include "module/sound_energy.h"
-SoundEnergy sound_energy;
-#include "module/sound_brightness.h"
-SoundBrightness sound_brightness(sound_energy);
-#include "module/brightness.h"
-#include "module/linear_rotary_encoder.h"
-#include "module/control.h"
-
-const uint8_t id3[] PROGMEM = {
- 15, 14,  5,  4,
- 16, 13,  6,  3,
- 17, 12,  7,  2,
- 18, 11,  8,  1,
- 19, 10,  9,  0
-};
-Adafruit_NeoPixel* const strip3 = new Adafruit_NeoPixel(20, 3, NEO_GRB + NEO_KHZ800);
-ProgmemBoard* const board3 = new ProgmemBoard(strip3, 4, 5, id3);
-
-const uint8_t id5[] PROGMEM = { 
-  4, 5, 14, 15,
-  3, 6, 13, 16,
-  2, 7, 12, 17,
-  1, 8, 11, 18,
-  0, 9, 10, 19
-};
-Adafruit_NeoPixel* const strip5 = new Adafruit_NeoPixel(20, 5, NEO_GRB + NEO_KHZ800);
-ProgmemBoard* const board5 = new ProgmemBoard(strip5, 4, 5, id5);
-
-const uint8_t id6[] PROGMEM = {
- 19, 10,  9,  0,
- 18, 11,  8,  1,
- 17, 12,  7,  2,
- 16, 13,  6,  3,
- 15, 14,  5,  4
-};
-Adafruit_NeoPixel* const strip6 = new Adafruit_NeoPixel(20, 6, NEO_GRB + NEO_KHZ800);
-ProgmemBoard* const board6 = new ProgmemBoard(strip6, 4, 5, id6);
-
-const uint8_t id9[] PROGMEM = {
- 18, 17, 16, 15,
- 11, 12, 13, 14,
- 10,  9,  8,  7,
-  4,  5,  6, NO_PIXEL,
-  3,  2,  1,  0
-};
-Adafruit_NeoPixel* const strip9 = new Adafruit_NeoPixel(19, 9, NEO_GRB + NEO_KHZ800);
-ProgmemBoard* const board9 = new ProgmemBoard(strip9, 4, 5, id9);
-
-const uint8_t id10[] PROGMEM = { 
-  8,  9, 10, 11,
-  7,  6,  5,  4, 
-  0,  1,  2,  3
-};
-Adafruit_NeoPixel* const strip10 = new Adafruit_NeoPixel(12, 10, NEO_GRB + NEO_KHZ800);
-ProgmemBoard* const board10 = new ProgmemBoard(strip10, 4, 3, id10);
-
-const uint8_t id11[] PROGMEM = { 
-  0,
-  1,
-  2,
-  3,
-  4,
-  5,
-  6,
-  7,
-  8,
-  9
-};
-Adafruit_NeoPixel* const strip11 = new Adafruit_NeoPixel(10, 11, NEO_GRB + NEO_KHZ800);
-ProgmemBoard* const board11 = new ProgmemBoard(strip11, 1, 10, id11);
-
-Control control;
-LinearRotaryEncoder<uint16_t> bpm_encoder(BPM_PIN_0, BPM_PIN_1, 1, 1000, &BPM, 1);
-//Brightness brightness_encoder(BRIGHTNESS_PIN0, BRIGHTNESS_PIN1);
-LinearRotaryEncoder<uint16_t> color_encoder(BRIGHTNESS_PIN0, BRIGHTNESS_PIN1, 128, 512*20, &COLORS512, 128);
-
-void setup() {
-	wall.add( board3,  0,  0);
-	wall.add( board5,  4,  0);
-	wall.add( board6,  0,  5);
-	wall.add( board9,  4,  5);
-	wall.add(board10,  8,  0);
-	wall.add(board11, 12,  0);
-}
-
-void loop() {
-	control.loop();
-	Control::main->loop();
-	bpm_encoder.loop();
-	//brightness_encoder.loop();
-	color_encoder.loop();
-	if (BRIGHTNESS_MODE){
-		sound_energy.loop();
-		sound_brightness.loop();
-	}
-}
+void loop() {}

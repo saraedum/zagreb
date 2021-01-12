@@ -28,7 +28,7 @@ class Random {
 			x = a*x + c;
 		}
 	public:
-		Random(uint32_t seed):x(seed){}
+		explicit Random(uint32_t seed):x(seed){}
 		uint32_t random(){
 			skip();
 			return x;
