@@ -1,4 +1,4 @@
-# A very outdated Arduino Program to Drive a Wall of LED Lights
+# An Arduino Program to Drive a Wall of LED Lights
 
 To build and install this Sketch, do the following:
 
